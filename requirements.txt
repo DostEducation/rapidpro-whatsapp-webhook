@@ -8,3 +8,4 @@ pydantic==1.10.0
 sqlalchemy==1.4.26
 uvicorn==0.15.0
 setuptools==69.2.0
+python-dotenv==1.0.1
