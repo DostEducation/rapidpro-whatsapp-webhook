@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from agraffe import Agraffe
 from app.services import WebhookTransactionLogService
+from app.utils.loggingutils import logger
 
 app = FastAPI()
 
@@ -12,7 +13,9 @@ def handle_payload(request):
             if jsonData:
                 handle_webhook(jsonData)
         except Exception as e:
-            print(f"Error: {e}")
+            logger.error(
+                f"Exception occured while handling the webhook payload: {jsonData}. Error: {e}"
+            )
         return jsonData
     else:
         return "System does not accepts GET request"

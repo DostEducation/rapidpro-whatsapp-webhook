@@ -3,6 +3,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+ENVIRONMENT = os.environ.get("ENVIRONMENT", "development")
+
 # Database configuration
 POSTGRES = {
     "user": os.getenv("DB_USER"),

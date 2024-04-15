@@ -1,6 +1,7 @@
 import json
 from app.helpers import db
 from app import models
+from app.utils.loggingutils import logger
 
 
 class WebhookTransactionLogService:
@@ -16,7 +17,7 @@ class WebhookTransactionLogService:
             db.commit()
             return new_webhook_log
         except Exception as e:
-            print(
+            logger.error(
                 f"Error while creating new webhook log. Webhook: {jsonData}. Error message: {e}"
             )
         finally:
@@ -28,6 +29,8 @@ class WebhookTransactionLogService:
             db.add(webhook_log)
             db.commit()
         except Exception as e:
-            print(f"Error while marking webhook log as processed. Error message: {e}")
+            logger.error(
+                f"Error while marking webhook log as processed. Error message: {e}"
+            )
         finally:
             db.close()
