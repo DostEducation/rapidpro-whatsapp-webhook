@@ -24,7 +24,7 @@ Handling and processing Incoming webhook request configured at Glific.
     ```
 4. Install the dependencies:
     ```sh
-    pip install -r requirements-dev.txt
+    pip install -r requirements.txt
     ```
 5. Set up your .env file by copying .env.example
     ```sh
