@@ -1,12 +1,12 @@
 agraffe==0.7.0
 fastapi==0.70.0
 functions-framework==3.5.0
+google-cloud-logging==3.10.0
 pre-commit==3.5.0
 psycopg2==2.9.9
 psycopg2-binary==2.9.1
 pydantic==1.10.0
+python-dotenv==1.0.1
+setuptools==69.2.0
 sqlalchemy==1.4.26
 uvicorn==0.15.0
-setuptools==69.2.0
-python-dotenv==1.0.1
-google-cloud-logging==3.10.0

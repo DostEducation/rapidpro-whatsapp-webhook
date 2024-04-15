@@ -1,9 +1,8 @@
-from app import TimestampMixin
 from pydantic import BaseModel
-from sqlalchemy import Column, Integer, Text, Boolean
-from sqlalchemy.orm import declarative_base
+from sqlalchemy import Boolean, Column, Integer, Text
 
-Base = declarative_base()
+from app import TimestampMixin
+from app.models.base import Base
 
 
 class WebhookTransactionLog(Base):

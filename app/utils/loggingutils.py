@@ -1,12 +1,13 @@
 import logging
-import config
 
 from google.cloud import logging as gcloud_logging
+
+from config import ENVIRONMENT
 
 logger = logging.getLogger()
 logging.basicConfig(level=logging.DEBUG)
 
-if config.ENVIRONMENT == "development":
+if ENVIRONMENT == "development":
     log_handler = logger.handlers[0]
     logger.addHandler(log_handler)
 else:

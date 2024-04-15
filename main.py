@@ -1,5 +1,6 @@
-from fastapi import FastAPI
 from agraffe import Agraffe
+from fastapi import FastAPI
+
 from app.services import WebhookTransactionLogService
 from app.utils.loggingutils import logger
 
