@@ -1,11 +1,13 @@
 from datetime import datetime
 
-from pydantic import BaseModel, Field
+from sqlalchemy import Column, DateTime
+from sqlalchemy.ext.declarative import declared_attr
 
 
-class TimestampMixin(BaseModel):
-    created_on: datetime = Field(default_factory=datetime.now)
-    updated_on: datetime = Field(default_factory=datetime.now)
+class TimestampMixin:
+    created_on = Column(DateTime, default=datetime.utcnow)
+    updated_on = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    class Config:
-        orm_mode = True
+    @declared_attr
+    def __tablename__(cls):
+        return cls.__name__.lower()
