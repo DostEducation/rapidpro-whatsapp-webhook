@@ -17,9 +17,9 @@ def handle_payload(request):
             logger.error(
                 f"Exception occured while handling the webhook payload: {jsonData}. Error: {e}"
             )
-        return jsonData
+        return "Success"
     else:
-        return "System does not accepts GET request"
+        return "Currently, the system does not accept a GET request"
 
 
 def handle_webhook(jsonData):
