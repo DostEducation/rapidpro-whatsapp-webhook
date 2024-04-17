@@ -1,12 +1,11 @@
-from agraffe import Agraffe
-from fastapi import FastAPI
+import functions_framework
 
 from app.services import WebhookTransactionLogService
 from app.utils.loggingutils import logger
 
-app = FastAPI()
 
-
+### Endpoint for Cloud function
+@functions_framework.http
 def handle_payload(request):
     if request.method == "POST":
         try:
@@ -26,6 +25,3 @@ def handle_webhook(jsonData):
     transaction_log_service = WebhookTransactionLogService()
     webhook_log = transaction_log_service.create_new_webhook_log(jsonData)
     transaction_log_service.mark_webhook_log_as_processed(webhook_log)
-
-
-handler = Agraffe.entry_point(app)
