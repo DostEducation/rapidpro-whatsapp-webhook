@@ -31,6 +31,5 @@ if FLASK_APP in ("production", "staging"):
         "postgresql://%(user)s:%(password)s@/%(database)s?host=%(conn_str)s/"
         % POSTGRES
     )
-    print(SQLALCHEMY_DATABASE_URI)
 
 LOGGING_LEVEL = os.environ.get("LOGGING_LEVEL", "DEBUG")
