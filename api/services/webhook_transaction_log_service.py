@@ -18,7 +18,8 @@ class WebhookTransactionLogService:
             return new_webhook_log
         except Exception as e:
             logger.error(
-                f"Error while creating new webhook log. Webhook: {jsonData}. Error message: {e}"
+                f"Error while creating new webhook log. Webhook: {jsonData}."
+                f"Error message: {e}"
             )
             return None
 
@@ -28,6 +29,7 @@ class WebhookTransactionLogService:
             db_helper.save(webhook_log)
         except Exception as e:
             logger.error(
-                f"Error while marking webhook log as processed. Error message: {e}"
+                f"Error while marking webhook log as processed."
+                f"Error message: {e}"
             )
             return None

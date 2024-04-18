@@ -4,6 +4,8 @@ from logging.config import fileConfig
 from alembic import context
 from flask import current_app
 
+from api import models
+
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
@@ -25,14 +27,17 @@ def get_engine():
 
 def get_engine_url():
     try:
-        return get_engine().url.render_as_string(hide_password=False).replace("%", "%%")
+        return (
+            get_engine()
+            .url.render_as_string(hide_password=False)
+            .replace("%", "%%")
+        )
     except AttributeError:
         return str(get_engine().url).replace("%", "%%")
 
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-from api import models
 
 target_metadata = models.Base.metadata
 config.set_main_option("sqlalchemy.url", get_engine_url())
@@ -60,10 +65,11 @@ def run_migrations_offline():
 
     Calls to context.execute() here emit the given string to the
     script output.
-
     """
     url = config.get_main_option("sqlalchemy.url")
-    context.configure(url=url, target_metadata=get_metadata(), literal_binds=True)
+    context.configure(
+        url=url, target_metadata=get_metadata(), literal_binds=True
+    )
 
     with context.begin_transaction():
         context.run_migrations()
@@ -72,9 +78,8 @@ def run_migrations_offline():
 def run_migrations_online():
     """Run migrations in 'online' mode.
 
-    In this scenario we need to create an Engine
-    and associate a connection with the context.
-
+    In this scenario we need to create an Engine and associate a
+    connection with the context.
     """
 
     # this callback is used to prevent an auto-migration from being generated

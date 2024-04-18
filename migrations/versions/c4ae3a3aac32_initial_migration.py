@@ -3,7 +3,6 @@
 Revision ID: c4ae3a3aac32
 Revises:
 Create Date: 2024-04-18 14:12:03.526440
-
 """
 
 import sqlalchemy as sa

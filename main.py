@@ -5,7 +5,7 @@ from api.services import WebhookTransactionLogService
 from api.utils.loggingutils import logger
 
 
-### Endpoint for Cloud function
+# Endpoint for Cloud function
 @functions_framework.http
 def handle_payload(request):
     if request.method == "POST":
@@ -16,7 +16,8 @@ def handle_payload(request):
                     handle_webhook(jsonData)
             except Exception as e:
                 logger.error(
-                    f"Exception occured while handling the webhook payload: {jsonData}. Error: {e}"
+                    f"Exception while handling the webhook payload: {jsonData}"
+                    f"Error: {e}"
                 )
             return "Success"
     else:

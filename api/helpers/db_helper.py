@@ -12,13 +12,16 @@ def get_db_connection(connection_data={}):
     db_host = connection_data.get("db_host", app.config["DB_HOST"])
     db_pwd = connection_data.get("db_pwd", app.config["DB_PWD"])
 
-    db_conn_string = f"dbname={db_name} user={db_user} host={db_host} password={db_pwd}"
+    db_conn_string = (
+        f"dbname={db_name} user={db_user} host={db_host} password={db_pwd}"
+    )
 
     try:
         return psycopg2.connect(db_conn_string)
     except Exception as e:
         logger.error(
-            f"DB Helper: Unable to connect to the database: {db_conn_string}. Error message:{e}"
+            f"DB Helper: Unable to connect to the database: {db_conn_string}."
+            f"Error message:{e}"
         )
         return None
 
@@ -29,7 +32,8 @@ def save(data):
         db.session.commit()
     except Exception as e:
         logger.error(
-            f"Error occurred while committing the data in the database. Error message: {e}"
+            "Error occurred while committing the data in the database."
+            f"Error message: {e}"
         )
         logger.debug(traceback.format_exc())
         db.session.rollback()
