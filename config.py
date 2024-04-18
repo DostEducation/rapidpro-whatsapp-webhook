@@ -1,20 +1,37 @@
+"""Flask configuration."""
+
 import os
+from urllib.parse import quote
 
-from dotenv import load_dotenv
+FLASK_APP = os.environ.get("FLASK_APP", "development")
 
-load_dotenv()
+if FLASK_APP == "development":
+    from os import path
 
-ENVIRONMENT = os.environ.get("ENVIRONMENT", "development")
+    from dotenv import load_dotenv
+
+    basedir = path.abspath(path.dirname(__file__))
+    load_dotenv(path.join(basedir, ".env"))
+
 
 # Database configuration
 POSTGRES = {
-    "user": os.getenv("DB_USER"),
-    "password": os.getenv("DB_PASSWORD"),
-    "database": os.getenv("DB_NAME"),
-    "host": os.getenv("DB_HOST"),
-    "port": os.getenv("DB_PORT"),
+    "user": os.environ.get("DB_USER"),
+    "password": os.environ.get("DB_PASSWORD"),
+    "database": os.environ.get("DB_NAME"),
+    "host": os.environ.get("DB_HOST"),
+    "port": os.environ.get("DB_PORT"),
+    "connection_name": os.environ.get("CONNECTION_NAME"),
 }
 
-SQLALCHEMY_DATABASE_URL = (
+SQLALCHEMY_DATABASE_URI = (
     "postgresql://%(user)s:%(password)s@%(host)s:%(port)s/%(database)s" % POSTGRES
 )
+print(SQLALCHEMY_DATABASE_URI)
+
+# For socket based connection
+if FLASK_APP in ("production", "staging"):
+    SQLALCHEMY_DATABASE_URI = (
+        "postgresql://%(user)s:%(password)s@/%(database)s?host=%(connection_name)s/"
+        % POSTGRES
+    )
