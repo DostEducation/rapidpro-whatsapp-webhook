@@ -1,1 +1,1 @@
-from api.utils.loggingutils import *
+from .loggingutils import *

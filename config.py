@@ -26,7 +26,6 @@ POSTGRES = {
 SQLALCHEMY_DATABASE_URI = (
     "postgresql://%(user)s:%(password)s@%(host)s:%(port)s/%(database)s" % POSTGRES
 )
-print(SQLALCHEMY_DATABASE_URI)
 
 # For socket based connection
 if FLASK_APP in ("production", "staging"):

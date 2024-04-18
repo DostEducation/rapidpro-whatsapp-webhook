@@ -1,6 +1,6 @@
 import json
 
-from api import db, db_models
+from api import models
 from api.helpers import db_helper
 from api.utils.loggingutils import logger
 
@@ -9,7 +9,7 @@ class WebhookTransactionLogService:
     def create_new_webhook_log(self, jsonData):
         try:
             data = json.dumps(jsonData)
-            new_webhook_log = db_models.WebhookTransactionLog(
+            new_webhook_log = models.WebhookTransactionLog(
                 payload=data,
                 processed=False,
                 attempts=0,
