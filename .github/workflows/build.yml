@@ -34,6 +34,30 @@ jobs:
     - name: Install Python dependencies
       run: |
         pip install -r requirements.txt
+    - name: Set up Cloud SQL Proxy
+      run: |
+        wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy
+        chmod +x cloud_sql_proxy
+
+    - name: Start Cloud SQL Proxy
+      env:
+        GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+      run: |
+        echo "$GOOGLE_APPLICATION_CREDENTIALS" > credentials.json
+        ./cloud_sql_proxy -instances=${{ secrets.CONNECTION_NAME_GITHUB_ACTION }}=tcp:5432 -credential_file=credentials.json &
+
+    - name: Run Flask Migration
+      env:
+        SQLALCHEMY_DATABASE_URI_GITHUB_ACTION: ${{ secrets.SQLALCHEMY_DATABASE_URI }}
+        FLASK_APP: ${{ secrets.FLASK_APP_STAGING }}
+        FLASK_ENV: ${{ secrets.FLASK_APP_STAGING }}
+      run: |
+        flask db upgrade
+
+    - name: Stop Cloud SQL Proxy
+      run: |
+        pkill cloud_sql_proxy
+
     - name: 'Deploy a gen 2 cloud function'
       run: |
         gcloud functions deploy whatsapp-webhook-analytics-staging \
