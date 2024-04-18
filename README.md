@@ -20,11 +20,11 @@ Handling and processing Incoming webhook request configured at Glific.
     ```
 3. Activate the virtual environment
 
-    For mac-os:
+    **For mac-os:**
     ```sh
     source ./venv/bin/activate
     ```
-    For win os:
+    **For win os:**
     ```sh
     venv\Scripts\Activate.ps1
     ```
@@ -37,11 +37,27 @@ Handling and processing Incoming webhook request configured at Glific.
     cp .env.example .env
     ```
 6. Add/update variables in your `.env` file for your environment.
-7. Run the following command to get started with pre-commit
+7. Run these commands to add environment variables in the system.
+
+   **For Windows**
+    ```sh
+    $env:FLASK_APP="manage.py"
+    $env:PYTHONPATH="<Path of your project, eg: C:\Users\whatsapp-webhook-analytics>"
+    ```
+    **For Mac**
+    ```sh
+    export FLASK_APP=manage.py
+    export PYTHONPATH=path-of-the-project
+    ```
+8. Upgrade DB to the latest version using this command.
+    ```sh
+     flask db upgrade
+    ```
+9. Run the following command to get started with pre-commit
     ```sh
     pre-commit install
     ```
-8. Start the server by following command
+10. Start the server by following command
     ```sh
     functions_framework --target=handle_payload --debug
     ```
