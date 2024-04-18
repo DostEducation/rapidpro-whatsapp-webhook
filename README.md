@@ -19,8 +19,14 @@ Handling and processing Incoming webhook request configured at Glific.
     python -m venv venv
     ```
 3. Activate the virtual environment
+
+    For mac-os:
     ```sh
     source ./venv/bin/activate
+    ```
+    For win os:
+    ```sh
+    venv\Scripts\Activate.ps1
     ```
 4. Install the dependencies:
     ```sh
