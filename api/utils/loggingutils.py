@@ -4,9 +4,10 @@ import os
 from google.cloud import logging as gcloud_logging
 
 from api import app
+from config import LOGGING_LEVEL
 
 logger = logging.getLogger()
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=LOGGING_LEVEL)
 
 if os.environ.get("FLASK_ENV", "development"):
     log_handler = logger.handlers[0]

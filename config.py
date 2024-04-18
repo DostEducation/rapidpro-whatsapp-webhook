@@ -5,12 +5,9 @@ import os
 FLASK_APP = os.environ.get("FLASK_APP", "development")
 
 if FLASK_APP == "development":
-    from os import path
-
     from dotenv import load_dotenv
 
-    basedir = path.abspath(path.dirname(__file__))
-    load_dotenv(path.join(basedir, ".env"))
+    load_dotenv()
 
 
 # Database configuration
@@ -34,3 +31,5 @@ if FLASK_APP in ("production", "staging"):
         "postgresql://%(user)s:%(password)s@/%(database)s?host=%(conn_str)s/"
         % POSTGRES
     )
+
+LOGGING_LEVEL = os.environ.get("LOGGING_LEVEL", "DEBUG")

@@ -20,13 +20,13 @@ Handling and processing Incoming webhook request configured at Glific.
     ```
 3. Activate the virtual environment
 
-    **For mac-os:**
-    ```sh
-    source ./venv/bin/activate
-    ```
-    **For win os:**
+    **For Windows**
     ```sh
     venv\Scripts\Activate.ps1
+    ```
+    **For Mac**
+    ```sh
+    source ./venv/bin/activate
     ```
 4. Install the dependencies:
     ```sh
