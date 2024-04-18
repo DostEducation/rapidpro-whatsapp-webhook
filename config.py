@@ -1,7 +1,6 @@
 """Flask configuration."""
 
 import os
-from urllib.parse import quote
 
 FLASK_APP = os.environ.get("FLASK_APP", "development")
 
