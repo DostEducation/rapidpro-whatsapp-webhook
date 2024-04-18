@@ -3,13 +3,13 @@ name: build-and-deployment
 on:
   push:
     branches:
-      - develop
+      - feature/10-continuous-deployment-for-gen2-function
       # - main
 
 jobs:
   deploy-staging:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/develop'
+    if: github.ref == 'refs/heads/feature/10-continuous-deployment-for-gen2-function'
     steps:
     - uses: 'actions/checkout@v3'
     - run: ls
