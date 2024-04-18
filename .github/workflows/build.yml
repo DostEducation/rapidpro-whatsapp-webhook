@@ -1,0 +1,86 @@
+name: build-and-deployment
+
+on:
+  push:
+    branches:
+      - develop
+      # - main
+
+jobs:
+  deploy-staging:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop'
+    steps:
+    - uses: 'actions/checkout@v3'
+    - run: ls
+    - id: 'auth'
+      name: 'Authenticate to Google Cloud'
+      uses: 'google-github-actions/auth@v1'
+      with:
+        credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+
+    - name: Debug GCP credentials
+      env:
+        GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+      run: |
+        echo "$GOOGLE_APPLICATION_CREDENTIALS" > credentials.json
+
+    - name: 'Set up Cloud SDK'
+      uses: 'google-github-actions/setup-gcloud@v1'
+      with:
+        version: '>= 363.0.0'
+    - name: 'Use gcloud CLI'
+      run: 'gcloud info'
+    - name: Install Python dependencies
+      run: |
+        pip install -r requirements.txt
+    - name: 'Deploy a gen 2 cloud function'
+      run: |
+        gcloud functions deploy whatsapp-webhook-analytics-staging \
+          --gen2 \
+          --runtime=python312 \
+          --region=asia-south1 \
+          --trigger-http \
+          --entry-point=handle_payload \
+          --memory=256MB \
+          --timeout=30s \
+          --set-env-vars=FLASK_APP=${{ secrets.FLASK_APP_STAGING }},DB_USER=${{ secrets.DB_USER }},DB_PASSWORD=${{ secrets.DB_PASSWORD }},DB_NAME=${{ secrets.DB_NAME }},DB_PORT=${{ secrets.DB_PORT }},CONNECTION_NAME=${{ secrets.CONNECTION_NAME }},LOGGING_LEVEL=${{ secrets.LOGGING_LEVEL }}
+
+  # deploy-production:
+  #   runs-on: ubuntu-latest
+  #   if: github.ref == 'refs/heads/main'
+  #   steps:
+  #   - uses: 'actions/checkout@v3'
+  #   - run: ls
+  #   - id: 'auth'
+  #     name: 'Authenticate to Google Cloud'
+  #     uses: 'google-github-actions/auth@v1'
+  #     with:
+  #       credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+
+  #   - name: Debug GCP credentials
+  #     env:
+  #       GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+  #     run: |
+  #       echo "$GOOGLE_APPLICATION_CREDENTIALS" > credentials.json
+
+  #   - name: 'Set up Cloud SDK'
+  #     uses: 'google-github-actions/setup-gcloud@v1'
+  #     with:
+  #       version: '>= 363.0.0'
+  #   - name: 'Use gcloud CLI'
+  #     run: 'gcloud info'
+  #   - name: Install Python dependencies
+  #     run: |
+  #       pip install -r requirements.txt
+  #   - name: 'Deploy a gen 2 cloud function'
+  #     run: |
+  #       gcloud functions deploy admindashboard-webhook-queue-service-prod \
+  #         --gen2 \
+  #         --runtime=python312 \
+  #         --region=asia-south1 \
+  #         --trigger-http \
+  #         --entry-point=handle_payload \
+  #         --memory=256MB \
+  #         --timeout=30s \
+  #         --set-env-vars=FLASK_APP=${{ secrets.FLASK_APP_STAGING }},DB_USER=${{ secrets.DB_USER }},DB_PASSWORD=${{ secrets.DB_PASSWORD }},DB_NAME=${{ secrets.DB_NAME }},DB_PORT=${{ secrets.DB_PORT }},CONNECTION_NAME=${{ secrets.CONNECTION_NAME }},LOGGING_LEVEL=${{ secrets.LOGGING_LEVEL }}
