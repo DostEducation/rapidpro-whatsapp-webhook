@@ -32,4 +32,11 @@ if FLASK_APP in ("production", "staging"):
         % POSTGRES
     )
 
+github_action_db_url = os.environ.get(
+    "SQLALCHEMY_DATABASE_URI_GITHUB_ACTION", None
+)
+
+if github_action_db_url:
+    SQLALCHEMY_DATABASE_URI = github_action_db_url
+
 LOGGING_LEVEL = os.environ.get("LOGGING_LEVEL", "DEBUG")
