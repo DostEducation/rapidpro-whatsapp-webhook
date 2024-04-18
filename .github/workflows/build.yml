@@ -49,7 +49,7 @@ jobs:
     - name: Run Flask Migration
       env:
         SQLALCHEMY_DATABASE_URI_GITHUB_ACTION: ${{ secrets.SQLALCHEMY_DATABASE_URI }}
-        FLASK_APP: ${{ secrets.FLASK_APP_STAGING }}
+        FLASK_APP: ${{ secrets.FLASK_APP }}
         FLASK_ENV: ${{ secrets.FLASK_APP_STAGING }}
       run: |
         flask db upgrade
