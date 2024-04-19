@@ -12,7 +12,6 @@ jobs:
     if: github.ref == 'refs/heads/develop'
     steps:
     - uses: 'actions/checkout@v3'
-    - run: ls
     - id: 'auth'
       name: 'Authenticate to Google Cloud'
       uses: 'google-github-actions/auth@v1'
@@ -75,7 +74,6 @@ jobs:
   #   if: github.ref == 'refs/heads/main'
   #   steps:
   #     - uses: 'actions/checkout@v3'
-  #     - run: ls
   #     - id: 'auth'
   #       name: 'Authenticate to Google Cloud'
   #       uses: 'google-github-actions/auth@v1'
