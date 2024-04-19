@@ -3,13 +3,13 @@ name: build-and-deployment
 on:
   push:
     branches:
-      - feature/10-continuous-deployment-for-gen2-function
+      - develop
       # - main
 
 jobs:
   deploy-staging:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/feature/10-continuous-deployment-for-gen2-function'
+    if: github.ref == 'refs/heads/develop'
     steps:
     - uses: 'actions/checkout@v3'
     - run: ls
@@ -74,37 +74,61 @@ jobs:
   #   runs-on: ubuntu-latest
   #   if: github.ref == 'refs/heads/main'
   #   steps:
-  #   - uses: 'actions/checkout@v3'
-  #   - run: ls
-  #   - id: 'auth'
-  #     name: 'Authenticate to Google Cloud'
-  #     uses: 'google-github-actions/auth@v1'
-  #     with:
-  #       credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+  #     - uses: 'actions/checkout@v3'
+  #     - run: ls
+  #     - id: 'auth'
+  #       name: 'Authenticate to Google Cloud'
+  #       uses: 'google-github-actions/auth@v1'
+  #       with:
+  #         credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
 
-  #   - name: Debug GCP credentials
-  #     env:
-  #       GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
-  #     run: |
-  #       echo "$GOOGLE_APPLICATION_CREDENTIALS" > credentials.json
+  #     - name: Debug GCP credentials
+  #       env:
+  #         GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+  #       run: |
+  #         echo "$GOOGLE_APPLICATION_CREDENTIALS" > credentials.json
 
-  #   - name: 'Set up Cloud SDK'
-  #     uses: 'google-github-actions/setup-gcloud@v1'
-  #     with:
-  #       version: '>= 363.0.0'
-  #   - name: 'Use gcloud CLI'
-  #     run: 'gcloud info'
-  #   - name: Install Python dependencies
-  #     run: |
-  #       pip install -r requirements.txt
-  #   - name: 'Deploy a gen 2 cloud function'
-  #     run: |
-  #       gcloud functions deploy admindashboard-webhook-queue-service-prod \
-  #         --gen2 \
-  #         --runtime=python312 \
-  #         --region=asia-south1 \
-  #         --trigger-http \
-  #         --entry-point=handle_payload \
-  #         --memory=256MB \
-  #         --timeout=30s \
-  #         --set-env-vars=FLASK_APP=${{ secrets.FLASK_APP_STAGING }},DB_USER=${{ secrets.DB_USER }},DB_PASSWORD=${{ secrets.DB_PASSWORD }},DB_NAME=${{ secrets.DB_NAME }},DB_PORT=${{ secrets.DB_PORT }},CONNECTION_NAME=${{ secrets.CONNECTION_NAME }},LOGGING_LEVEL=${{ secrets.LOGGING_LEVEL }}
+  #     - name: 'Set up Cloud SDK'
+  #       uses: 'google-github-actions/setup-gcloud@v1'
+  #       with:
+  #         version: '>= 363.0.0'
+  #     - name: 'Use gcloud CLI'
+  #       run: 'gcloud info'
+  #     - name: Install Python dependencies
+  #       run: |
+  #         pip install -r requirements.txt
+  #     - name: Set up Cloud SQL Proxy
+  #       run: |
+  #         wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy
+  #         chmod +x cloud_sql_proxy
+
+  #     - name: Start Cloud SQL Proxy
+  #       env:
+  #         GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+  #       run: |
+  #         echo "$GOOGLE_APPLICATION_CREDENTIALS" > credentials.json
+  #         ./cloud_sql_proxy -instances=${{ secrets.CONNECTION_NAME_GITHUB_ACTION }}=tcp:5432 -credential_file=credentials.json &
+
+  #     - name: Run Flask Migration
+  #       env:
+  #         SQLALCHEMY_DATABASE_URI_GITHUB_ACTION: ${{ secrets.SQLALCHEMY_DATABASE_URI_PROD }}
+  #         FLASK_APP: ${{ secrets.FLASK_APP }}
+  #         FLASK_ENV: ${{ secrets.FLASK_APP_PROD }}
+  #       run: |
+  #         flask db upgrade
+
+  #     - name: Stop Cloud SQL Proxy
+  #       run: |
+  #         pkill cloud_sql_proxy
+
+  #     - name: 'Deploy a gen 2 cloud function'
+  #       run: |
+  #         gcloud functions deploy whatsapp-webhook-analytics-prod \
+  #           --gen2 \
+  #           --runtime=python312 \
+  #           --region=asia-south1 \
+  #           --trigger-http \
+  #           --entry-point=handle_payload \
+  #           --memory=256MB \
+  #           --timeout=30s \
+  #           --set-env-vars=FLASK_APP=${{ secrets.FLASK_APP_PROD }},DB_USER=${{ secrets.DB_USER_PROD }},DB_PASSWORD=${{ secrets.DB_PASSWORD_PROD }},DB_NAME=${{ secrets.DB_NAME_PROD }},DB_PORT=${{ secrets.DB_PORT }},CONNECTION_NAME=${{ secrets.CONNECTION_NAME_PROD }},LOGGING_LEVEL=${{ secrets.LOGGING_LEVEL }}
