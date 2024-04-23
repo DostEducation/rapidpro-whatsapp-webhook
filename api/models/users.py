@@ -9,4 +9,4 @@ class Users(TimestampMixin, db.Model):
     glific_user_id = db.Column(db.Integer)
     phone = db.Column(db.String(50), nullable=False)
     name = db.Column(db.String(255))
-    location = db.Column(db.String(500))
+    location = db.Column(db.String(255))

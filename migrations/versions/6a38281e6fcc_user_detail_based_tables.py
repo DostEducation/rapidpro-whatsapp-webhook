@@ -1,15 +1,16 @@
 """User detail based tables.
 
-Revision ID: 9a954f894483
+Revision ID: 6a38281e6fcc
 Revises: 70bea50174bf
-Create Date: 2024-04-22 10:43:30.711767
+Create Date: 2024-04-23 19:23:02.085782
 """
 
 import sqlalchemy as sa
 from alembic import op
+from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = "9a954f894483"
+revision = "6a38281e6fcc"
 down_revision = "70bea50174bf"
 branch_labels = None
 depends_on = None
@@ -23,9 +24,9 @@ def upgrade():
         sa.Column("glific_user_id", sa.Integer(), nullable=True),
         sa.Column("phone", sa.String(length=50), nullable=False),
         sa.Column("name", sa.String(length=255), nullable=True),
-        sa.Column("location", sa.String(length=500), nullable=True),
-        sa.Column("created_on", sa.DateTime(), nullable=True),
-        sa.Column("updated_on", sa.DateTime(), nullable=True),
+        sa.Column("location", sa.String(length=255), nullable=True),
+        sa.Column("created_on", sa.DateTime(), nullable=False),
+        sa.Column("updated_on", sa.DateTime(), nullable=False),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(
@@ -35,8 +36,8 @@ def upgrade():
         sa.Column("user_phone", sa.String(length=50), nullable=False),
         sa.Column("field_name", sa.String(length=255), nullable=True),
         sa.Column("field_value", sa.String(length=255), nullable=True),
-        sa.Column("created_on", sa.DateTime(), nullable=True),
-        sa.Column("updated_on", sa.DateTime(), nullable=True),
+        sa.Column("created_on", sa.DateTime(), nullable=False),
+        sa.Column("updated_on", sa.DateTime(), nullable=False),
         sa.ForeignKeyConstraint(
             ["user_id"],
             ["users.id"],
@@ -47,16 +48,16 @@ def upgrade():
         "user_flows",
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("user_id", sa.Integer(), nullable=True),
-        sa.Column("user_phone", sa.String(length=50), nullable=False),
+        sa.Column("user_phone", sa.Integer(), nullable=False),
         sa.Column("flow_uuid", sa.String(length=255), nullable=True),
         sa.Column("flow_name", sa.String(length=255), nullable=True),
         sa.Column("flow_type", sa.String(length=255), nullable=True),
         sa.Column("flow_run_status", sa.String(length=255), nullable=True),
         sa.Column("flow_start_time", sa.DateTime(), nullable=True),
         sa.Column("flow_end_time", sa.DateTime(), nullable=True),
-        sa.Column("is_active", sa.Boolean(), nullable=True),
-        sa.Column("created_on", sa.DateTime(), nullable=True),
-        sa.Column("updated_on", sa.DateTime(), nullable=True),
+        sa.Column("is_active", sa.Boolean(), nullable=False),
+        sa.Column("created_on", sa.DateTime(), nullable=False),
+        sa.Column("updated_on", sa.DateTime(), nullable=False),
         sa.ForeignKeyConstraint(
             ["user_id"],
             ["users.id"],
@@ -69,14 +70,14 @@ def upgrade():
         sa.Column("user_id", sa.Integer(), nullable=True),
         sa.Column("user_flow_id", sa.Integer(), nullable=True),
         sa.Column("activity", sa.String(length=500), nullable=True),
-        sa.Column("started", sa.Boolean(), nullable=True),
+        sa.Column("is_started", sa.Boolean(), nullable=False),
         sa.Column("started_on", sa.DateTime(), nullable=True),
-        sa.Column("succeeded", sa.Boolean(), nullable=True),
+        sa.Column("is_succeeded", sa.Boolean(), nullable=False),
         sa.Column("succeeded_on", sa.DateTime(), nullable=True),
-        sa.Column("completed", sa.Boolean(), nullable=True),
+        sa.Column("is_completed", sa.Boolean(), nullable=False),
         sa.Column("completed_on", sa.DateTime(), nullable=True),
-        sa.Column("created_on", sa.DateTime(), nullable=True),
-        sa.Column("updated_on", sa.DateTime(), nullable=True),
+        sa.Column("created_on", sa.DateTime(), nullable=False),
+        sa.Column("updated_on", sa.DateTime(), nullable=False),
         sa.ForeignKeyConstraint(
             ["user_flow_id"],
             ["user_flows.id"],
@@ -96,8 +97,8 @@ def upgrade():
         sa.Column(
             "indicator_question_response", sa.String(length=255), nullable=True
         ),
-        sa.Column("created_on", sa.DateTime(), nullable=True),
-        sa.Column("updated_on", sa.DateTime(), nullable=True),
+        sa.Column("created_on", sa.DateTime(), nullable=False),
+        sa.Column("updated_on", sa.DateTime(), nullable=False),
         sa.ForeignKeyConstraint(
             ["user_flow_id"],
             ["user_flows.id"],
@@ -108,11 +109,31 @@ def upgrade():
         ),
         sa.PrimaryKeyConstraint("id"),
     )
+    with op.batch_alter_table(
+        "webhook_transaction_log", schema=None
+    ) as batch_op:
+        batch_op.alter_column(
+            "created_on", existing_type=postgresql.TIMESTAMP(), nullable=False
+        )
+        batch_op.alter_column(
+            "updated_on", existing_type=postgresql.TIMESTAMP(), nullable=False
+        )
+
     # ### end Alembic commands ###
 
 
 def downgrade():
     # ### commands auto generated by Alembic - please adjust! ###
+    with op.batch_alter_table(
+        "webhook_transaction_log", schema=None
+    ) as batch_op:
+        batch_op.alter_column(
+            "updated_on", existing_type=postgresql.TIMESTAMP(), nullable=True
+        )
+        batch_op.alter_column(
+            "created_on", existing_type=postgresql.TIMESTAMP(), nullable=True
+        )
+
     op.drop_table("user_indicator_responses")
     op.drop_table("user_activities")
     op.drop_table("user_flows")
