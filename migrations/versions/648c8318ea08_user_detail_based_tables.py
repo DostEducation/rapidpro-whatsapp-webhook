@@ -1,8 +1,8 @@
 """User detail based tables.
 
-Revision ID: 6a38281e6fcc
+Revision ID: 648c8318ea08
 Revises: 70bea50174bf
-Create Date: 2024-04-23 19:23:02.085782
+Create Date: 2024-04-24 10:13:43.211473
 """
 
 import sqlalchemy as sa
@@ -10,7 +10,7 @@ from alembic import op
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = "6a38281e6fcc"
+revision = "648c8318ea08"
 down_revision = "70bea50174bf"
 branch_labels = None
 depends_on = None
@@ -22,18 +22,23 @@ def upgrade():
         "users",
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("glific_user_id", sa.Integer(), nullable=True),
-        sa.Column("phone", sa.String(length=50), nullable=False),
+        sa.Column("phone", sa.Integer(), nullable=False),
         sa.Column("name", sa.String(length=255), nullable=True),
         sa.Column("location", sa.String(length=255), nullable=True),
         sa.Column("created_on", sa.DateTime(), nullable=False),
         sa.Column("updated_on", sa.DateTime(), nullable=False),
         sa.PrimaryKeyConstraint("id"),
     )
+    with op.batch_alter_table("users", schema=None) as batch_op:
+        batch_op.create_index(
+            batch_op.f("ix_users_phone"), ["phone"], unique=False
+        )
+
     op.create_table(
         "user_attributes",
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("user_id", sa.Integer(), nullable=True),
-        sa.Column("user_phone", sa.String(length=50), nullable=False),
+        sa.Column("user_phone", sa.Integer(), nullable=False),
         sa.Column("field_name", sa.String(length=255), nullable=True),
         sa.Column("field_value", sa.String(length=255), nullable=True),
         sa.Column("created_on", sa.DateTime(), nullable=False),
@@ -44,6 +49,13 @@ def upgrade():
         ),
         sa.PrimaryKeyConstraint("id"),
     )
+    with op.batch_alter_table("user_attributes", schema=None) as batch_op:
+        batch_op.create_index(
+            batch_op.f("ix_user_attributes_user_phone"),
+            ["user_phone"],
+            unique=False,
+        )
+
     op.create_table(
         "user_flows",
         sa.Column("id", sa.Integer(), nullable=False),
@@ -64,10 +76,18 @@ def upgrade():
         ),
         sa.PrimaryKeyConstraint("id"),
     )
+    with op.batch_alter_table("user_flows", schema=None) as batch_op:
+        batch_op.create_index(
+            batch_op.f("ix_user_flows_user_phone"),
+            ["user_phone"],
+            unique=False,
+        )
+
     op.create_table(
         "user_activities",
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("user_id", sa.Integer(), nullable=True),
+        sa.Column("user_phone", sa.Integer(), nullable=False),
         sa.Column("user_flow_id", sa.Integer(), nullable=True),
         sa.Column("activity", sa.String(length=500), nullable=True),
         sa.Column("is_started", sa.Boolean(), nullable=False),
@@ -88,10 +108,18 @@ def upgrade():
         ),
         sa.PrimaryKeyConstraint("id"),
     )
+    with op.batch_alter_table("user_activities", schema=None) as batch_op:
+        batch_op.create_index(
+            batch_op.f("ix_user_activities_user_phone"),
+            ["user_phone"],
+            unique=False,
+        )
+
     op.create_table(
         "user_indicator_responses",
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("user_id", sa.Integer(), nullable=True),
+        sa.Column("user_phone", sa.Integer(), nullable=False),
         sa.Column("user_flow_id", sa.Integer(), nullable=True),
         sa.Column("indicator_question", sa.String(length=255), nullable=True),
         sa.Column(
@@ -109,6 +137,15 @@ def upgrade():
         ),
         sa.PrimaryKeyConstraint("id"),
     )
+    with op.batch_alter_table(
+        "user_indicator_responses", schema=None
+    ) as batch_op:
+        batch_op.create_index(
+            batch_op.f("ix_user_indicator_responses_user_phone"),
+            ["user_phone"],
+            unique=False,
+        )
+
     with op.batch_alter_table(
         "webhook_transaction_log", schema=None
     ) as batch_op:
@@ -134,9 +171,28 @@ def downgrade():
             "created_on", existing_type=postgresql.TIMESTAMP(), nullable=True
         )
 
+    with op.batch_alter_table(
+        "user_indicator_responses", schema=None
+    ) as batch_op:
+        batch_op.drop_index(
+            batch_op.f("ix_user_indicator_responses_user_phone")
+        )
+
     op.drop_table("user_indicator_responses")
+    with op.batch_alter_table("user_activities", schema=None) as batch_op:
+        batch_op.drop_index(batch_op.f("ix_user_activities_user_phone"))
+
     op.drop_table("user_activities")
+    with op.batch_alter_table("user_flows", schema=None) as batch_op:
+        batch_op.drop_index(batch_op.f("ix_user_flows_user_phone"))
+
     op.drop_table("user_flows")
+    with op.batch_alter_table("user_attributes", schema=None) as batch_op:
+        batch_op.drop_index(batch_op.f("ix_user_attributes_user_phone"))
+
     op.drop_table("user_attributes")
+    with op.batch_alter_table("users", schema=None) as batch_op:
+        batch_op.drop_index(batch_op.f("ix_users_phone"))
+
     op.drop_table("users")
     # ### end Alembic commands ###
