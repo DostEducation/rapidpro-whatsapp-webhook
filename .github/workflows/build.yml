@@ -57,7 +57,7 @@ jobs:
       run: |
         pkill cloud_sql_proxy
 
-    - name: 'Deploying stging whatsapp webhook analytics function'
+    - name: 'Deploying staging whatsapp webhook analytics function'
       run: |
         gcloud functions deploy whatsapp-webhook-analytics-staging \
           --gen2 \
