@@ -5,7 +5,7 @@ import os
 FLASK_APP = os.environ.get("FLASK_APP", "development")
 SQLALCHEMY_DATABASE_URI = os.environ.get("SQLALCHEMY_DATABASE_URI", None)
 
-if FLASK_APP in ["development", "testing"]:
+if FLASK_APP == "development":
     # Fetch env from the .env file
     from dotenv import load_dotenv
 
