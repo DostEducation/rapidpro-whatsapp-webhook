@@ -41,10 +41,8 @@ def handle_webhook(json_data):
 
     contact_data = json_data["contact"]
     if contact_data:
-        handle_contact_field_data(contact_data)
-
-    user_id = 1  # Placeholder for user id. Will make is  dynamic.
-    process_user_indicators(user_id, json_data)
+        user = handle_contact_field_data(contact_data)
+        process_user_indicators(user, json_data)
 
 
 def handle_contact_field_data(contact_data):
@@ -53,9 +51,10 @@ def handle_contact_field_data(contact_data):
 
 
 def process_user_indicators(
-    user_id,
+    user,
     json_data,
 ):
+    user_id = user.__getattribute__(id)
     user_phone = json_data.get("phone")
     user_flow_id = (
         1  # Placeholder for user_flow_id, should be obtained from user_flow details.
