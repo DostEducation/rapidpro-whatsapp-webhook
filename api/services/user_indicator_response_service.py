@@ -26,7 +26,6 @@ class UserIndicatorResponseService:
                         indicator_question_response=response_value,
                     )
                     db.session.add(user_response)
-                    break
 
             db.session.commit()
 
