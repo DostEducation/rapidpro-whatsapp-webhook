@@ -5,7 +5,7 @@ from api.mixins import TimestampMixin
 class UserIndicatorResponses(TimestampMixin, db.Model):
 
     __tablename__ = "user_indicator_responses"
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.BigInteger, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     user_phone = db.Column(db.BigInteger, nullable=False, index=True)
     user_flow_id = db.Column(db.Integer, db.ForeignKey("user_flows.id"))

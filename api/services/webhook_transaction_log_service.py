@@ -29,7 +29,6 @@ class WebhookTransactionLogService:
             db_utils.save(webhook_log)
         except Exception as e:
             logger.error(
-                f"Error while marking webhook log as processed."
-                f"Error message: {e}"
+                f"Error while marking webhook log as processed." f"Error message: {e}"
             )
             return None
