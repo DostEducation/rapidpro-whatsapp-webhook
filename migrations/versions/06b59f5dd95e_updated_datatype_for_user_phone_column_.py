@@ -41,9 +41,7 @@ def upgrade():
             existing_nullable=False,
         )
 
-    with op.batch_alter_table(
-        "user_indicator_responses", schema=None
-    ) as batch_op:
+    with op.batch_alter_table("user_indicator_responses", schema=None) as batch_op:
         batch_op.alter_column(
             "user_phone",
             existing_type=sa.INTEGER(),
@@ -72,9 +70,7 @@ def downgrade():
             existing_nullable=False,
         )
 
-    with op.batch_alter_table(
-        "user_indicator_responses", schema=None
-    ) as batch_op:
+    with op.batch_alter_table("user_indicator_responses", schema=None) as batch_op:
         batch_op.alter_column(
             "user_phone",
             existing_type=sa.BigInteger(),

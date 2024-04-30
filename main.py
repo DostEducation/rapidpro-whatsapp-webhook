@@ -3,6 +3,7 @@ import functions_framework
 from api import app
 from api.services import (
     UserIndicatorResponseService,
+    UserCreationService,
     WebhookTransactionLogService,
 )
 from api.utils.loggingutils import logger
@@ -38,7 +39,7 @@ def handle_webhook(json_data):
     webhook_log = transaction_log_service.create_new_webhook_log(json_data)
     transaction_log_service.mark_webhook_log_as_processed(webhook_log)
 
-    contact_data = jsonData["contact"]
+    contact_data = json_data["contact"]
     if contact_data:
         handle_contact_field_data(contact_data)
 

@@ -21,9 +21,7 @@ class UserCreationService:
                 )
 
                 db_utils.save(user)
-                logger.info(
-                    f"Created a new user entry with phone number {user.phone}."
-                )
+                logger.info(f"Created a new user entry with phone number {user.phone}.")
             logger.info(
                 f"Skipped user creation for user {user.phone}. "
                 "Reason: User already exists."
