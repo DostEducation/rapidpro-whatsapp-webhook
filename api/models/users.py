@@ -5,7 +5,7 @@ from api.mixins import TimestampMixin
 
 
 class UserQuery(BaseQuery):
-    def get_user_by_phone(self, user_phone):
+    def get_by_phone(self, user_phone):
         return self.filter(Users.phone == user_phone).first()
 
 
