@@ -3,6 +3,7 @@
 import os
 
 FLASK_APP = os.environ.get("FLASK_APP", "development")
+
 SQLALCHEMY_DATABASE_URI = os.environ.get("SQLALCHEMY_DATABASE_URI", None)
 
 if FLASK_APP == "development":

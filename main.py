@@ -3,6 +3,7 @@ import functions_framework
 from api import app
 from api.services import (
     UserIndicatorResponseService,
+    UserCreationService,
     WebhookTransactionLogService,
 )
 from api.utils.loggingutils import logger
@@ -38,8 +39,17 @@ def handle_webhook(json_data):
     webhook_log = transaction_log_service.create_new_webhook_log(json_data)
     transaction_log_service.mark_webhook_log_as_processed(webhook_log)
 
+    contact_data = json_data["contact"]
+    if contact_data:
+        handle_contact_field_data(contact_data)
+
     user_id = 1  # Placeholder for user id. Will make is  dynamic.
     process_user_indicators(user_id, json_data)
+
+
+def handle_contact_field_data(contact_data):
+    user_creation_service = UserCreationService()
+    user_creation_service.create_new_user(contact_data)
 
 
 def process_user_indicators(
