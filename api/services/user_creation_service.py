@@ -10,11 +10,11 @@ class UserCreationService:
     def create_new_user(self, contact_data):
         try:
             user_phone = contact_data["phone"]
-            formatted_user_phone = int(user_phone[10:])
+            formatted_user_phone = int(user_phone[-10:])
             user = models.Users.query.get_by_phone(formatted_user_phone)
             if user:
                 logger.info(
-                    f"Skipped user creation for user {user.phone}."
+                    f"Skipped user creation for user {user}."
                     "Reason: User already exists."
                 )
                 return user
@@ -30,11 +30,11 @@ class UserCreationService:
                 f"Error message: {e}"
             )
 
-    def create_user(contact_data, formatted_user_phone):
+    def create_user(self, contact_data, formatted_user_phone):
         glific_user_id = contact_data["id"]
         name = contact_data["name"]
 
-        user = models.Users(
+        user = self.class_model(
             glific_user_id=glific_user_id,
             phone=formatted_user_phone,
             name=name,
