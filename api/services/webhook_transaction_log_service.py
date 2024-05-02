@@ -6,9 +6,9 @@ from api.utils.loggingutils import logger
 
 
 class WebhookTransactionLogService:
-    def create_new_webhook_log(self, jsonData):
+    def create_new_webhook_log(self, json_data):
         try:
-            data = json.dumps(jsonData)
+            data = json.dumps(json_data)
             new_webhook_log = models.WebhookTransactionLog(
                 payload=data,
                 processed=False,
@@ -18,7 +18,7 @@ class WebhookTransactionLogService:
             return new_webhook_log
         except Exception as e:
             logger.error(
-                f"Error while creating new webhook log. Webhook: {jsonData}."
+                f"Error while creating new webhook log. Webhook: {json_data}."
                 f"Error message: {e}"
             )
             return None
