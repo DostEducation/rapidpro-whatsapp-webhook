@@ -47,8 +47,6 @@ class UserActivitiesService:
                         db.session.add(user_activity)
 
             db.session.commit(user_activity)
-            print("sub_key:", sub_key)
-            print("sub_value:", sub_value)
             logger.info(f"Captured user activity for {self.user_phone}.")
         except Exception as e:
             logger.error(
