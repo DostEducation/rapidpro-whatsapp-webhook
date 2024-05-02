@@ -7,7 +7,7 @@ class UserCreationService:
     def create_new_user(self, contact_data):
         try:
             user_phone = contact_data["phone"]
-            formatted_user_phone = int(user_phone[:10])
+            formatted_user_phone = int(user_phone[-10:])
             user = models.Users.query.get_by_phone(formatted_user_phone)
             if not user:
                 glific_user_id = contact_data["id"]
