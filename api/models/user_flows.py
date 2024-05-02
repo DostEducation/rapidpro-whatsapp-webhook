@@ -1,8 +1,27 @@
+from datetime import date
+from flask_sqlalchemy.query import Query as BaseQuery
+from sqlalchemy import func
+
 from api import db
 from api.mixins import TimestampMixin
 
 
+class UserFlowsQuery(BaseQuery):
+    def get_by_flow_uuid_and_phone(self, flow_uuid, user_phone):
+        return self.filter(
+            UserFlows.flow_uuid == flow_uuid,
+            UserFlows.user_phone == user_phone,
+            func.DATE(UserFlows.flow_start_time) == date.today(),
+        ).first()
+
+
 class UserFlows(TimestampMixin, db.Model):
+    query_class = UserFlowsQuery
+
+    class FlowRunStatus:
+        IN_PROGRESS = "in-progress"
+        COMPLETED = "completed"
+        ENDED = "ended"
 
     __tablename__ = "user_flows"
     id = db.Column(db.Integer, primary_key=True)
