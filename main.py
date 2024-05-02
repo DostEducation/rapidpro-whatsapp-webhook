@@ -42,6 +42,7 @@ def handle_webhook(json_data):
     contact_data = json_data["contact"]
     if contact_data:
         user = handle_contact_field_data(contact_data)
+        handle_flow_activity_data(user, json_data)
         process_user_indicators(user, json_data)
 
     transaction_log_service.mark_webhook_log_as_processed(webhook_log)
@@ -64,10 +65,10 @@ def process_user_indicators(
     user_indicator_res_service.process_user_indicator_responses(json_data)
 
 
-def handle_flow_activity_data(user_id, json_data):
+def handle_flow_activity_data(user, json_data):
     user_phone = json_data.get("phone")
     user_flow_id = (
         1  # Placeholder for user_flow_id, should be obtained from user_flow details.
     )
-    user_activities_service = UserActivitiesService(user_id, user_phone, user_flow_id)
+    user_activities_service = UserActivitiesService(user.id, user_phone, user_flow_id)
     user_activities_service.handle_user_activities(json_data)
