@@ -34,4 +34,4 @@ Example of Pull Request Title: #1023 Add user authentication functionality
 - [ ] The changes requires a change to the documentation.
 - [ ] I have updated the documentation based on the my changes.
 - [ ] I have added tests to cover my changes (if not applicable, please state why)
-- [ ] All new and existing tests are passing.\
+- [ ] All new and existing tests are passing.
