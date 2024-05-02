@@ -11,10 +11,10 @@ class UserCreationService:
         try:
             user_phone = contact_data["phone"]
             formatted_user_phone = int(user_phone[-10:])
-            user = models.Users.query.get_by_phone(formatted_user_phone)
+            user = self.class_model.query.get_by_phone(formatted_user_phone)
             if user:
                 logger.info(
-                    f"Skipped user creation for user {user}."
+                    f"Skipped user creation for user {user.phone}. "
                     "Reason: User already exists."
                 )
                 return user
