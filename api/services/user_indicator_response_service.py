@@ -3,11 +3,11 @@ from api.utils.loggingutils import logger
 
 
 class UserIndicatorResponseService:
-    def __init__(self, user, user_flow_id):
+    def __init__(self, user, user_flow):
         self.key = "indicator_question"  # Prefix for the indicators key in payload
         self.user_id = user.id
         self.user_phone = user.phone
-        self.user_flow_id = user_flow_id
+        self.user_flow_id = user_flow.id
         self.class_model = models.UserIndicatorResponses
 
     def process_user_indicator_responses(self, data):
