@@ -21,12 +21,12 @@ class FlowRunLogService:
                 flow_uuid, self.user.phone
             )
 
+            user_flow_log = None
+
             if not today_flow_log:
                 user_flow_log = self.create_log(flow_uuid, flow_name, flow_type)
             elif today_flow_log and flow_completed:
                 user_flow_log = self.update_log(today_flow_log)
-            else:
-                user_flow_log = None
 
             return user_flow_log
         except Exception as e:
