@@ -2,6 +2,7 @@ import functions_framework
 
 from api import app
 from api.services import (
+    FlowRunLogService,
     UserActivitiesService,
     UserCreationService,
     UserIndicatorResponseService,
@@ -42,8 +43,9 @@ def handle_webhook(json_data):
     contact_data = json_data["contact"]
     if contact_data:
         user = handle_contact_field_data(contact_data)
-        handle_flow_activity_data(user, json_data)
-        process_user_indicators(user, json_data)
+        user_flow = handle_user_flow_logs(user, json_data)
+        handle_flow_activity_data(user, user_flow, json_data)
+        process_user_indicators(user, user_flow, json_data)
 
     transaction_log_service.mark_webhook_log_as_processed(webhook_log)
 
@@ -53,21 +55,21 @@ def handle_contact_field_data(contact_data):
     return user_creation_service.create_new_user(contact_data)
 
 
+def handle_user_flow_logs(user, json_data):
+    flow_run_log_service = FlowRunLogService(user)
+    return flow_run_log_service.create_user_flow_log(json_data)
+
+
 def process_user_indicators(
     user,
+    user_flow,
     json_data,
 ):
-
-    user_flow_id = (
-        1  # Placeholder for user_flow_id, should be obtained from user_flow details.
-    )
-    user_indicator_res_service = UserIndicatorResponseService(user, user_flow_id)
+    user_indicator_res_service = UserIndicatorResponseService(user, user_flow)
     user_indicator_res_service.process_user_indicator_responses(json_data)
+    return True
 
 
-def handle_flow_activity_data(user, json_data):
-    user_flow_id = (
-        1  # Placeholder for user_flow_id, should be obtained from user_flow details.
-    )
-    user_activities_service = UserActivitiesService(user, user_flow_id)
+def handle_flow_activity_data(user, user_flow, json_data):
+    user_activities_service = UserActivitiesService(user, user_flow)
     user_activities_service.handle_user_activities(json_data)

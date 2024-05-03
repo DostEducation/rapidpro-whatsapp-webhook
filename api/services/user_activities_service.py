@@ -8,13 +8,13 @@ from api.utils.loggingutils import logger
 
 
 class UserActivitiesService:
-    def __init__(self, user, user_flow_id):
+    def __init__(self, user, user_flow):
         self.started = "started"  # Prefix for the activity key in payload
         self.success = "success"  # Prefix for the activity key in payload
         self.completed = "completed"  # Prefix for the activity key in payload
         self.user_id = user.id
         self.user_phone = user.phone
-        self.user_flow_id = user_flow_id
+        self.user_flow_id = user_flow.id
         self.class_model = models.UserActivities
 
     def handle_user_activities(self, json_data):
