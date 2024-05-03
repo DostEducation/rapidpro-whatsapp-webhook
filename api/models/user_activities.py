@@ -1,8 +1,38 @@
+from flask_sqlalchemy.query import Query as BaseQuery
+from sqlalchemy import desc
+
 from api import db
 from api.mixins import TimestampMixin
 
 
+class UserActivitiesQuery(BaseQuery):
+    def get_started_activity_for_user(self, user_id, user_phone, user_flow_id):
+        return (
+            self.filter_by(
+                user_id=user_id,
+                user_phone=user_phone,
+                user_flow_id=user_flow_id,
+                is_started=True,
+            )
+            .order_by(desc("started_on"))
+            .first()
+        )
+
+    def get_succeeded_activity_for_user(self, user_id, user_phone, user_flow_id):
+        return (
+            self.filter_by(
+                user_id=user_id,
+                user_phone=user_phone,
+                user_flow_id=user_flow_id,
+                is_succeeded=True,
+            )
+            .order_by(desc("succeeded_on"))
+            .first()
+        )
+
+
 class UserActivities(TimestampMixin, db.Model):
+    query_class = UserActivitiesQuery
 
     __tablename__ = "user_activities"
     id = db.Column(db.Integer, primary_key=True)
