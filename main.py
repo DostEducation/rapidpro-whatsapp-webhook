@@ -60,6 +60,11 @@ def handle_user_flow_logs(user, json_data):
     return flow_run_log_service.create_user_flow_log(json_data)
 
 
+def handle_flow_activity_data(user, user_flow, json_data):
+    user_activities_service = UserActivitiesService(user, user_flow)
+    user_activities_service.handle_user_activities(json_data)
+
+
 def process_user_indicators(
     user,
     user_flow,
@@ -68,8 +73,3 @@ def process_user_indicators(
     user_indicator_res_service = UserIndicatorResponseService(user, user_flow)
     user_indicator_res_service.process_user_indicator_responses(json_data)
     return True
-
-
-def handle_flow_activity_data(user, user_flow, json_data):
-    user_activities_service = UserActivitiesService(user, user_flow)
-    user_activities_service.handle_user_activities(json_data)

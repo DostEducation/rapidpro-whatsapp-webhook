@@ -1,6 +1,5 @@
-from datetime import datetime, timedelta
-
 from api import models
+from api.helpers import common_helper
 from api.utils import db_utils
 from api.utils.loggingutils import logger
 
@@ -44,7 +43,7 @@ class FlowRunLogService:
             flow_name=flow_name,
             flow_type=flow_type,
             flow_run_status=self.class_model.FlowRunStatus.IN_PROGRESS,
-            flow_start_time=datetime.utcnow() + timedelta(minutes=330),
+            flow_start_time=common_helper.get_ist_timestamp(),
             is_active=True,
         )
 
@@ -54,7 +53,7 @@ class FlowRunLogService:
 
     def update_log(self, today_flow_log):
         today_flow_log.flow_run_status = self.class_model.FlowRunStatus.COMPLETED
-        today_flow_log.flow_end_time = datetime.utcnow() + timedelta(minutes=330)
+        today_flow_log.flow_end_time = common_helper.get_ist_timestamp()
         today_flow_log.is_active = False
 
         db_utils.save(today_flow_log)
