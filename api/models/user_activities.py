@@ -12,7 +12,7 @@ class UserActivitiesQuery(BaseQuery):
             self.filter(
                 UserActivities.user_id == user_id,
                 UserActivities.user_phone == user_phone,
-                UserActivities.is_started is True,
+                UserActivities.is_started.is_(True),
                 func.DATE(UserActivities.started_on) == date.today(),
             )
             .order_by(desc("started_on"))
@@ -24,7 +24,7 @@ class UserActivitiesQuery(BaseQuery):
             self.filter(
                 UserActivities.user_id == user_id,
                 UserActivities.user_phone == user_phone,
-                UserActivities.is_succeeded is True,
+                UserActivities.is_succeeded.is_(True),
                 func.DATE(UserActivities.succeeded_on) == date.today(),
             )
             .order_by(desc("succeeded_on"))
