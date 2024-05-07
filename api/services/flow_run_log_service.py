@@ -16,16 +16,20 @@ class FlowRunLogService:
             flow_type = json_data.get("flow_type")
             flow_status = json_data.get("flow_status")
 
-            latest_flow_log = self.class_model.query.get_latest_flow_log_today(
+            latest_flow_log = self.class_model.query.get_todays_latest_user_flow(
                 flow_uuid, self.user.phone
             )
 
             user_flow_log = None
 
-            if flow_status == self.class_model.FlowRunStatus.COMPLETED:
+            if flow_status == self.class_model.FlowRunStatus.STARTED:
+                user_flow_log = self.create_log(flow_uuid, flow_name, flow_type)
+            elif flow_status == self.class_model.FlowRunStatus.COMPLETED:
                 user_flow_log = self.update_log(latest_flow_log)
             else:
-                user_flow_log = self.create_log(flow_uuid, flow_name, flow_type)
+                logger.error(
+                    f"Got unexpected flow status {flow_status}. Flow name {flow_name}."
+                )
 
             return user_flow_log
         except Exception as e:
@@ -42,7 +46,7 @@ class FlowRunLogService:
             flow_uuid=flow_uuid,
             flow_name=flow_name,
             flow_type=flow_type,
-            flow_run_status=self.class_model.FlowRunStatus.IN_PROGRESS,
+            flow_run_status=self.class_model.FlowRunStatus.STARTED,
             flow_start_time=common_helper.get_ist_timestamp(),
             is_active=True,
         )

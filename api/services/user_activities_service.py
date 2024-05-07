@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
 from api import db, models
 from api.helpers import common_helper
@@ -36,7 +36,7 @@ class UserActivitiesService:
 
     def create_or_update_user_activity(
         self, activity_key: str, current_ist_time: datetime
-    ):
+    ) -> Optional[models.UserActivities]:
         is_started = common_helper.check_activity_key(
             activity_key, "activity_", "_started"
         )
@@ -48,41 +48,56 @@ class UserActivitiesService:
         )
 
         if is_started:
-            return self.class_model(
-                user_id=self.user_id,
-                user_phone=self.user_phone,
-                user_flow_id=self.user_flow_id,
-                activity=activity_key.strip(),
-                is_started=is_started,
-                started_on=current_ist_time,
-                is_succeeded=None,
-                succeeded_on=None,
-                is_completed=None,
-                completed_on=None,
-            )
+            return self.create_started_activity(activity_key, current_ist_time)
         elif is_succeeded:
-            last_activity = self.class_model.query.get_started_activity_for_user(
-                self.user_id, self.user_phone
-            )
-
-            if last_activity:
-                last_activity.is_succeeded = True
-                last_activity.succeeded_on = current_ist_time
-                return last_activity
-            else:
-                logger.error("No previous activity found for updating 'is_succeeded'.")
-                return None
+            return self.update_succeeded_activity(current_ist_time)
         elif is_completed:
-            last_activity = self.class_model.query.get_succeeded_activity_for_user(
-                self.user_id, self.user_phone
-            )
-
-            if last_activity:
-                last_activity.is_completed = True
-                last_activity.completed_on = current_ist_time
-                return last_activity
-            else:
-                logger.error("No previous activity found for updating 'is_completed'.")
-                return None
+            return self.update_completed_activity(current_ist_time)
         else:
+            return None
+
+    def create_started_activity(
+        self, activity_key: str, current_ist_time: datetime
+    ) -> models.UserActivities:
+        return self.class_model(
+            user_id=self.user_id,
+            user_phone=self.user_phone,
+            user_flow_id=self.user_flow_id,
+            activity=activity_key.strip(),
+            is_started=True,
+            started_on=current_ist_time,
+            is_succeeded=None,
+            succeeded_on=None,
+            is_completed=None,
+            completed_on=None,
+        )
+
+    def update_succeeded_activity(
+        self, current_ist_time: datetime
+    ) -> Optional[models.UserActivities]:
+        last_activity = self.class_model.query.get_todays_started_activity_for_user(
+            self.user_id, self.user_phone
+        )
+
+        if last_activity:
+            last_activity.is_succeeded = True
+            last_activity.succeeded_on = current_ist_time
+            return last_activity
+        else:
+            logger.error("No previous activity found for updating 'is_succeeded'.")
+            return None
+
+    def update_completed_activity(
+        self, current_ist_time: datetime
+    ) -> Optional[models.UserActivities]:
+        last_activity = self.class_model.query.get_todays_succeeded_activity_for_user(
+            self.user_id, self.user_phone
+        )
+
+        if last_activity:
+            last_activity.is_completed = True
+            last_activity.completed_on = current_ist_time
+            return last_activity
+        else:
+            logger.error("No previous activity found for updating 'is_completed'.")
             return None

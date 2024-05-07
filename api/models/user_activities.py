@@ -7,7 +7,7 @@ from api.mixins import TimestampMixin
 
 
 class UserActivitiesQuery(BaseQuery):
-    def get_started_activity_for_user(self, user_id, user_phone):
+    def get_todays_started_activity_for_user(self, user_id, user_phone):
         return (
             self.filter(
                 UserActivities.user_id == user_id,
@@ -19,7 +19,7 @@ class UserActivitiesQuery(BaseQuery):
             .first()
         )
 
-    def get_succeeded_activity_for_user(self, user_id, user_phone):
+    def get_todays_succeeded_activity_for_user(self, user_id, user_phone):
         return (
             self.filter(
                 UserActivities.user_id == user_id,

@@ -7,7 +7,7 @@ from api.mixins import TimestampMixin
 
 
 class UserFlowsQuery(BaseQuery):
-    def get_latest_flow_log_today(self, flow_uuid, user_phone):
+    def get_todays_latest_user_flow(self, flow_uuid, user_phone):
         return (
             self.filter(
                 UserFlows.flow_uuid == flow_uuid,
@@ -23,7 +23,7 @@ class UserFlows(TimestampMixin, db.Model):
     query_class = UserFlowsQuery
 
     class FlowRunStatus:
-        IN_PROGRESS = "in-progress"
+        STARTED = "started"
         COMPLETED = "completed"
         ENDED = "ended"
 
