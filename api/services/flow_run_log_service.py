@@ -14,18 +14,18 @@ class FlowRunLogService:
             flow_uuid = json_data.get("flow_uuid")
             flow_name = json_data.get("flow_name")
             flow_type = json_data.get("flow_type")
-            flow_completed = json_data.get("flow_completed")
+            flow_status = json_data.get("flow_status")
 
-            today_flow_log = self.class_model.query.get_by_flow_uuid_and_phone(
+            latest_flow_log = self.class_model.query.get_latest_flow_log_today(
                 flow_uuid, self.user.phone
             )
 
             user_flow_log = None
 
-            if not today_flow_log:
+            if flow_status == self.class_model.FlowRunStatus.COMPLETED:
+                user_flow_log = self.update_log(latest_flow_log)
+            else:
                 user_flow_log = self.create_log(flow_uuid, flow_name, flow_type)
-            elif today_flow_log and flow_completed:
-                user_flow_log = self.update_log(today_flow_log)
 
             return user_flow_log
         except Exception as e:
@@ -51,11 +51,11 @@ class FlowRunLogService:
         logger.info(f"Created a user flow log for phone number {self.user.phone}.")
         return user_flow_log
 
-    def update_log(self, today_flow_log):
-        today_flow_log.flow_run_status = self.class_model.FlowRunStatus.COMPLETED
-        today_flow_log.flow_end_time = common_helper.get_ist_timestamp()
-        today_flow_log.is_active = False
+    def update_log(self, latest_flow_log):
+        latest_flow_log.flow_run_status = self.class_model.FlowRunStatus.COMPLETED
+        latest_flow_log.flow_end_time = common_helper.get_ist_timestamp()
+        latest_flow_log.is_active = False
 
-        db_utils.save(today_flow_log)
+        db_utils.save(latest_flow_log)
         logger.info(f"Updated user flow log for phone number {self.user.phone}.")
-        return today_flow_log
+        return latest_flow_log

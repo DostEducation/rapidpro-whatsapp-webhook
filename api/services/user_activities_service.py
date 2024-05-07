@@ -11,9 +11,6 @@ class UserActivitiesService:
         self.user_id = user.id
         self.user_phone = user.phone
         self.user_flow_id = user_flow.id
-        self.started = "flow_started"
-        self.success = "flow_suceeded"
-        self.completed = "flow_completed"
         self.class_model = models.UserActivities
 
     def handle_user_activities(self, json_data: Dict[str, Any]):
@@ -40,9 +37,15 @@ class UserActivitiesService:
     def create_or_update_user_activity(
         self, activity_key: str, current_ist_time: datetime
     ):
-        is_started = self.started in activity_key
-        is_succeeded = self.success in activity_key
-        is_completed = self.completed in activity_key
+        is_started = common_helper.check_activity_key(
+            activity_key, "activity_", "_started"
+        )
+        is_succeeded = common_helper.check_activity_key(
+            activity_key, "activity_", "_success"
+        )
+        is_completed = common_helper.check_activity_key(
+            activity_key, "activity_", "_completed"
+        )
 
         if is_started:
             return self.class_model(
@@ -59,7 +62,7 @@ class UserActivitiesService:
             )
         elif is_succeeded:
             last_activity = self.class_model.query.get_started_activity_for_user(
-                self.user_id, self.user_phone, self.user_flow_id
+                self.user_id, self.user_phone
             )
 
             if last_activity:
@@ -71,7 +74,7 @@ class UserActivitiesService:
                 return None
         elif is_completed:
             last_activity = self.class_model.query.get_succeeded_activity_for_user(
-                self.user_id, self.user_phone, self.user_flow_id
+                self.user_id, self.user_phone
             )
 
             if last_activity:
