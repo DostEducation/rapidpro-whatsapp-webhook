@@ -42,14 +42,8 @@ class UserActivities(TimestampMixin, db.Model):
     user_flow_id = db.Column(db.Integer, db.ForeignKey("user_flows.id"))
     activity = db.Column(db.String(500))
     is_started = db.Column(db.Boolean)
-    started_on = db.Column(
-        db.DateTime(timezone=True), default=func.timezone("Asia/Kolkata")
-    )
+    started_on = db.Column(db.DateTime(timezone=True))
     is_succeeded = db.Column(db.Boolean)
-    succeeded_on = db.Column(
-        db.DateTime(timezone=True), default=func.timezone("Asia/Kolkata")
-    )
+    succeeded_on = db.Column(db.DateTime(timezone=True))
     is_completed = db.Column(db.Boolean)
-    completed_on = db.Column(
-        db.DateTime(timezone=True), default=func.timezone("Asia/Kolkata")
-    )
+    completed_on = db.Column(db.DateTime(timezone=True))
