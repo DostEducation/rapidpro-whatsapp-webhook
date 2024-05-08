@@ -48,7 +48,7 @@ class UserActivitiesService:
         )
 
         if is_started:
-            return self.create_started_activity(activity_key, current_ist_time)
+            return self.create_activity(activity_key, current_ist_time)
         elif is_succeeded:
             return self.update_succeeded_activity(current_ist_time)
         elif is_completed:
@@ -56,7 +56,7 @@ class UserActivitiesService:
         else:
             return None
 
-    def create_started_activity(
+    def create_activity(
         self, activity_key: str, current_ist_time: datetime
     ) -> models.UserActivities:
         return self.class_model(
@@ -66,10 +66,6 @@ class UserActivitiesService:
             activity=activity_key.strip(),
             is_started=True,
             started_on=current_ist_time,
-            is_succeeded=None,
-            succeeded_on=None,
-            is_completed=None,
-            completed_on=None,
         )
 
     def update_succeeded_activity(

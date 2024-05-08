@@ -34,7 +34,3 @@ repos:
     rev: v1.10.0
     hooks:
     -   id: python-use-type-annotations
-- repo: https://github.com/sondrelg/pep585-upgrade
-  rev: 'v1.0'
-  hooks:
-  - id: upgrade-type-hints
