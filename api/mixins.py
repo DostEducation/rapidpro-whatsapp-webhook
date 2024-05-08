@@ -1,7 +1,7 @@
 from api import db
 from api.helpers import common_helper
 
-ist_now = common_helper.get_ist_timestamp()
+ist_now = common_helper.get_current_utc_timestamp()
 
 
 class TimestampMixin:

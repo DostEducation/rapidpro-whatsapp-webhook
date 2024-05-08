@@ -60,7 +60,7 @@ class FlowRunLogService:
             flow_name=flow_name,
             flow_type=flow_type,
             flow_run_status=self.class_model.FlowRunStatus.STARTED,
-            flow_start_time=common_helper.get_ist_timestamp(),
+            flow_start_time=common_helper.get_current_utc_timestamp(),
             is_active=True,
         )
 
@@ -70,7 +70,7 @@ class FlowRunLogService:
 
     def update_log(self, latest_flow_log: models.UserFlows) -> models.UserFlows:
         latest_flow_log.flow_run_status = self.class_model.FlowRunStatus.COMPLETED
-        latest_flow_log.flow_end_time = common_helper.get_ist_timestamp()
+        latest_flow_log.flow_end_time = common_helper.get_current_utc_timestamp()
         latest_flow_log.is_active = False
 
         db_utils.save(latest_flow_log)

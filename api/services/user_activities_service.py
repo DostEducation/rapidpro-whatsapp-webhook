@@ -15,7 +15,7 @@ class UserActivitiesService:
 
     def handle_user_activities(self, json_data: dict[str, Any]):
         try:
-            current_ist_time = common_helper.get_ist_timestamp()
+            current_ist_time = common_helper.get_current_utc_timestamp()
             contact_activities = json_data.get("contact", {}).get("fields", {})
 
             for activity_key, _ in contact_activities.items():

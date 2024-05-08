@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 
 
-def get_ist_timestamp() -> datetime:
+def get_current_utc_timestamp() -> datetime:
     return datetime.now(timezone.utc)
 
 
