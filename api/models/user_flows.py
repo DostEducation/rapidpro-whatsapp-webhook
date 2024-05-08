@@ -35,6 +35,6 @@ class UserFlows(TimestampMixin, db.Model):
     flow_name = db.Column(db.String(255))
     flow_type = db.Column(db.String(255))
     flow_run_status = db.Column(db.String(255))
-    flow_start_time = db.Column(db.DateTime)
-    flow_end_time = db.Column(db.DateTime)
+    flow_start_time = db.Column(db.DateTime(timezone=True))
+    flow_end_time = db.Column(db.DateTime(timezone=True))
     is_active = db.Column(db.Boolean)

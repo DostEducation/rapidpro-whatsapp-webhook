@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-
 from flask.cli import FlaskGroup
 from flask_migrate import Migrate
 

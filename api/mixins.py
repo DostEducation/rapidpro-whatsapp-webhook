@@ -1,15 +1,14 @@
-from __future__ import absolute_import
-
-from datetime import datetime
-
 from api import db
+from api.helpers import common_helper
+
+ist_now = common_helper.get_ist_timestamp()
 
 
 class TimestampMixin:
-    created_on = db.Column(db.DateTime, default=datetime.now, nullable=False)
+    created_on = db.Column(db.DateTime(timezone=True), default=ist_now, nullable=False)
     updated_on = db.Column(
-        db.DateTime,
-        onupdate=datetime.now,
-        default=datetime.now,
+        db.DateTime(timezone=True),
+        onupdate=ist_now,
+        default=ist_now,
         nullable=False,
     )
