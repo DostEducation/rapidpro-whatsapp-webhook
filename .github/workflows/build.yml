@@ -3,13 +3,13 @@ name: build-and-deployment
 on:
   push:
     branches:
-      - develop
+      - bugfix/37-timestam-error
       - main
 
 jobs:
   deploy-staging:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/develop'
+    if: github.ref == 'refs/heads/bugfix/37-timestam-error'
     steps:
     - uses: 'actions/checkout@v4'
     - id: 'auth'
