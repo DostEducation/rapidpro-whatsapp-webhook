@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Dict, Any, Optional
+from typing import Any, Optional
 
 from api import db, models
 from api.helpers import common_helper
@@ -13,7 +13,7 @@ class UserActivitiesService:
         self.user_flow_id = user_flow.id
         self.class_model = models.UserActivities
 
-    def handle_user_activities(self, json_data: Dict[str, Any]):
+    def handle_user_activities(self, json_data: dict[str, Any]):
         try:
             current_ist_time = common_helper.get_ist_timestamp()
             contact_activities = json_data.get("contact", {}).get("fields", {})
