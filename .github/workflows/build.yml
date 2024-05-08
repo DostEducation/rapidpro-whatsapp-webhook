@@ -43,7 +43,7 @@ jobs:
       env:
         SQLALCHEMY_DATABASE_URI: ${{ secrets.SQLALCHEMY_DATABASE_URI }}
         FLASK_APP: ${{ secrets.FLASK_APP }}
-        FLASK_ENV: ${{ secrets.FLASK_APP_STAGING }}
+        FLASK_ENV: ${{ secrets.FLASK_ENV_STAGING }}
       run: |
         flask db upgrade
 
@@ -61,7 +61,7 @@ jobs:
           --entry-point=handle_payload \
           --memory=256MB \
           --timeout=30s \
-          --set-env-vars=FLASK_APP=${{ secrets.FLASK_APP_STAGING }},LOGGING_LEVEL=${{ secrets.LOGGING_LEVEL }},SQLALCHEMY_DATABASE_URI=${{ secrets.SQLALCHEMY_DATABASE_URI_STAGING }}
+          --set-env-vars=FLASK_ENV=${{ secrets.FLASK_ENV_STAGING }},LOGGING_LEVEL=${{ secrets.LOGGING_LEVEL }},SQLALCHEMY_DATABASE_URI=${{ secrets.SQLALCHEMY_DATABASE_URI_STAGING }}
 
   deploy-production:
     runs-on: ubuntu-latest
@@ -99,7 +99,7 @@ jobs:
         env:
           SQLALCHEMY_DATABASE_URI: ${{ secrets.SQLALCHEMY_DATABASE_URI_PROD }}
           FLASK_APP: ${{ secrets.FLASK_APP }}
-          FLASK_ENV: ${{ secrets.FLASK_APP_PROD }}
+          FLASK_ENV: ${{ secrets.FLASK_ENV_PROD }}
         run: |
           flask db upgrade
 
@@ -117,4 +117,4 @@ jobs:
             --entry-point=handle_payload \
             --memory=256MB \
             --timeout=30s \
-            --set-env-vars=FLASK_APP=${{ secrets.FLASK_APP_PROD }},LOGGING_LEVEL=${{ secrets.LOGGING_LEVEL }},SQLALCHEMY_DATABASE_URI=${{ secrets.SQLALCHEMY_DATABASE_URI_PRODUCTION }}
+            --set-env-vars=FLASK_ENV=${{ secrets.FLASK_ENV_PROD }},LOGGING_LEVEL=${{ secrets.LOGGING_LEVEL }},SQLALCHEMY_DATABASE_URI=${{ secrets.SQLALCHEMY_DATABASE_URI_PRODUCTION }}
