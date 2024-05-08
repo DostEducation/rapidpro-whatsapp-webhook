@@ -1,10 +1,8 @@
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timezone
 
 
 def get_ist_timestamp() -> datetime:
-    ist_offset = timedelta(hours=5, minutes=30)
-    utc_now = datetime.now(timezone.utc)
-    return utc_now + ist_offset
+    return datetime.now(timezone.utc)
 
 
 def check_activity_key(activity_key: str, keyword: str, status: str):
