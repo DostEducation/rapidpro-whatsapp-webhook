@@ -23,7 +23,7 @@ class UserFlows(TimestampMixin, db.Model):
     query_class = UserFlowsQuery
 
     class FlowRunStatus:
-        STARTED = "started"
+        SENT = "sent"
         COMPLETED = "completed"
         ENDED = "ended"
 
