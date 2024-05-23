@@ -18,13 +18,12 @@ class UserActivitiesService:
             current_time = common_helper.get_current_utc_timestamp()
             contact_activities = json_data.get("contact", {}).get("fields", {})
 
-            for activity_key, _ in contact_activities.items():
-                if activity_key.strip() in contact_activities:
-                    user_activity = self.create_or_update_user_activity(
-                        activity_key, current_time
-                    )
-                    if user_activity:
-                        db.session.add(user_activity)
+            for activity_key, activity_value in contact_activities.items():
+                user_activity = self.create_or_update_user_activity(
+                    activity_key, activity_value, current_time
+                )
+                if user_activity:
+                    db.session.add(user_activity)
 
             db.session.commit()
             logger.info(f"Captured user activity for {self.user_phone}.")
@@ -35,16 +34,16 @@ class UserActivitiesService:
             )
 
     def create_or_update_user_activity(
-        self, activity_key: str, current_time: datetime
+        self, activity_key: str, activity_value: dict[str, Any], current_time: datetime
     ) -> Optional[models.UserActivities]:
         is_started = common_helper.check_activity_key(
-            activity_key, "activity_", "_started"
+            activity_key, activity_value, "activity_", "_started"
         )
         is_succeeded = common_helper.check_activity_key(
-            activity_key, "activity_", "_success"
+            activity_key, activity_value, "activity_", "_success"
         )
         is_completed = common_helper.check_activity_key(
-            activity_key, "activity_", "_completed"
+            activity_key, activity_value, "activity_", "_completed"
         )
 
         if is_started:

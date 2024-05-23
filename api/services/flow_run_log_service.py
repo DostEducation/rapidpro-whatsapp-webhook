@@ -26,14 +26,10 @@ class FlowRunLogService:
                 )
             )
 
-            if flow_status == self.class_model.FlowRunStatus.STARTED:
+            if flow_status == self.class_model.FlowRunStatus.SENT:
                 user_flow_log = self.create_log(flow_uuid, flow_name, flow_type)
             elif flow_status == self.class_model.FlowRunStatus.COMPLETED:
                 user_flow_log = self.update_log(latest_flow_log)
-            else:
-                logger.error(
-                    f"Got unexpected flow status {flow_status}. Flow name {flow_name}."
-                )
 
         except Exception as e:
             logger.error(
@@ -43,7 +39,9 @@ class FlowRunLogService:
             raise
 
         if user_flow_log is None:
-            raise ValueError("Failed to create or update user flow log.")
+            return models.UserFlows.query.get_todays_latest_user_flow(
+                flow_uuid, self.user.phone
+            )
 
         return user_flow_log
 
@@ -58,8 +56,8 @@ class FlowRunLogService:
             user_phone=self.user.phone,
             flow_uuid=flow_uuid,
             flow_name=flow_name,
-            flow_type=flow_type,
-            flow_run_status=self.class_model.FlowRunStatus.STARTED,
+            flow_type=flow_type if flow_type else "activity",
+            flow_run_status=self.class_model.FlowRunStatus.SENT,
             flow_start_time=common_helper.get_current_utc_timestamp(),
             is_active=True,
         )
