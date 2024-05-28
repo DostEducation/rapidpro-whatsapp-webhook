@@ -16,9 +16,8 @@ class UserActivitiesService:
     def handle_user_activities(self, json_data: dict[str, Any]):
         try:
             current_time = common_helper.get_current_utc_timestamp()
-            contact_activities = json_data.get("contact", {}).get("fields", {})
 
-            for activity_key, activity_value in contact_activities.items():
+            for activity_key, activity_value in json_data.items():
                 user_activity = self.create_or_update_user_activity(
                     activity_key, activity_value, current_time
                 )
@@ -34,7 +33,7 @@ class UserActivitiesService:
             )
 
     def create_or_update_user_activity(
-        self, activity_key: str, activity_value: dict[str, Any], current_time: datetime
+        self, activity_key: str, activity_value: str, current_time: datetime
     ) -> Optional[models.UserActivities]:
         is_started = common_helper.check_activity_key(
             activity_key, activity_value, "activity_", "_started"
@@ -65,6 +64,7 @@ class UserActivitiesService:
             activity=activity_key.strip(),
             is_started=True,
             started_on=current_time,
+            is_succeeded=False,
         )
 
     def update_succeeded_activity(
