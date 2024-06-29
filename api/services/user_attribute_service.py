@@ -2,6 +2,7 @@ from typing import Any
 
 from api import db, models
 from api.utils.loggingutils import logger
+from config import SQL_KEYWORDS
 
 
 class UserAttributeService:
@@ -17,6 +18,8 @@ class UserAttributeService:
                 self.user_id
             )
             for field_key, field_value in contact_fields_data.items():
+                if field_key.lower() in SQL_KEYWORDS:
+                    continue
                 value = field_value.get("value")
                 user_attribute = existing_attributes.get(field_key)
 
