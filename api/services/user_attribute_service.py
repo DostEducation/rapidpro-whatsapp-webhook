@@ -1,3 +1,4 @@
+import re
 from typing import Any
 
 from api import db, models
@@ -17,8 +18,10 @@ class UserAttributeService:
                 self.user_id
             )
             for field_key, field_value in contact_fields_data.items():
-                if field_key.lower() == "name":
+
+                if not re.match(r"^\w+$", field_key) or field_key.lower() == "name":
                     continue
+
                 value = field_value.get("value")
                 user_attribute = existing_attributes.get(field_key)
 
