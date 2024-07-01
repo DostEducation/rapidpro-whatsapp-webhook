@@ -18,8 +18,13 @@ class UserAttributeService:
                 self.user_id
             )
             for field_key, field_value in contact_fields_data.items():
-
-                if not re.match(r"^\w+$", field_key) or field_key.lower() == "name":
+                if not re.match(r"^\w+$", field_key):
+                    logger.error(
+                        f"Found a contact variable {field_key} for {self.user_phone} "
+                        "with special character which can't be processed."
+                    )
+                    continue
+                elif field_key.lower() == "name":
                     continue
 
                 value = field_value.get("value")
