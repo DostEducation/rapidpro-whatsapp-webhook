@@ -24,6 +24,8 @@ class UserAttributeService:
                         "with special character which can't be processed."
                     )
                     continue
+                elif field_key.lower() == "name":
+                    continue
 
                 value = field_value.get("value")
                 user_attribute = existing_attributes.get(field_key)
