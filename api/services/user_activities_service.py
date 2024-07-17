@@ -35,13 +35,13 @@ class UserActivitiesService:
     def create_or_update_user_activity(
         self, activity_key: str, current_time: datetime
     ) -> Optional[models.UserActivities]:
-        is_started = common_helper.check_activity_key(
+        is_started = common_helper.validate_activity_status(
             activity_key, "activity_", "_started"
         )
-        is_succeeded = common_helper.check_activity_key(
+        is_succeeded = common_helper.validate_activity_status(
             activity_key, "activity_", "_success"
         )
-        is_completed = common_helper.check_activity_key(
+        is_completed = common_helper.validate_activity_status(
             activity_key, "activity_", "_completed"
         )
 
