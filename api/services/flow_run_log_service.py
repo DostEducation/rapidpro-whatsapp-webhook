@@ -72,7 +72,6 @@ class FlowRunLogService:
         return user_flow_log
 
     def update_log(self, latest_flow_log: models.UserFlows) -> models.UserFlows:
-        print("latest_flow_log", latest_flow_log)
         latest_flow_log.flow_run_status = self.class_model.FlowRunStatus.COMPLETED
         latest_flow_log.flow_end_time = common_helper.get_current_utc_timestamp()
         latest_flow_log.is_active = False
