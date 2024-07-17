@@ -17,9 +17,9 @@ class UserActivitiesService:
         try:
             current_time = common_helper.get_current_utc_timestamp()
 
-            for activity_key, activity_value in json_data.items():
+            for activity_key, _ in json_data.items():
                 user_activity = self.create_or_update_user_activity(
-                    activity_key, activity_value, current_time
+                    activity_key, current_time
                 )
                 if user_activity:
                     db.session.add(user_activity)
@@ -33,16 +33,16 @@ class UserActivitiesService:
             )
 
     def create_or_update_user_activity(
-        self, activity_key: str, activity_value: str, current_time: datetime
+        self, activity_key: str, current_time: datetime
     ) -> Optional[models.UserActivities]:
-        is_started = common_helper.check_activity_key(
-            activity_key, activity_value, "activity_", "_started"
+        is_started = common_helper.validate_activity_status(
+            activity_key, "activity_", "_started"
         )
-        is_succeeded = common_helper.check_activity_key(
-            activity_key, activity_value, "activity_", "_success"
+        is_succeeded = common_helper.validate_activity_status(
+            activity_key, "activity_", "_success"
         )
-        is_completed = common_helper.check_activity_key(
-            activity_key, activity_value, "activity_", "_completed"
+        is_completed = common_helper.validate_activity_status(
+            activity_key, "activity_", "_completed"
         )
 
         if is_started:
