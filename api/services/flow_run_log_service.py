@@ -26,10 +26,15 @@ class FlowRunLogService:
                 )
             )
 
-            if flow_status == self.class_model.FlowRunStatus.SENT:
+            if flow_status == self.class_model.FlowRunStatus.SENT or (
+                flow_status == self.class_model.FlowRunStatus.COMPLETED
+                and latest_flow_log is None
+            ):
                 user_flow_log = self.create_log(flow_uuid, flow_name, flow_type)
             elif flow_status == self.class_model.FlowRunStatus.COMPLETED:
                 user_flow_log = self.update_log(latest_flow_log)
+            else:
+                user_flow_log = latest_flow_log
 
         except Exception as e:
             logger.error(
